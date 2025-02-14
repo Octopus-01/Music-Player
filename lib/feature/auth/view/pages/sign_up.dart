@@ -1,8 +1,10 @@
 import 'package:client/core/theme/custom_field.dart';
+import 'package:client/feature/auth/repository/auth_remote_repository.dart';
 import 'package:client/feature/auth/view/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:client/feature/auth/view/widgets/auth_gradiant_button.dart';
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:fpdart/fpdart.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -64,11 +66,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 buttonText: 'Sign up',
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
-                   /* await ref.read(authViewModelProvider.notifier).signUpUser(
-                          name: nameController.text,
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );*/
+                    final res = await AuthRemoteRepository().signup(
+                        name: nameController.text,
+                        email: emailController.text,
+                        password: passwordController.text
+                    );
+
+                    final val = switch(res){
+                      Left(value: final l) => l,
+                      Right(value: final r) => r.toString(),
+                    };
+
                   } else {
                    /* showSnackBar(context, 'Missing fields!');*/
                   }

@@ -1,8 +1,13 @@
+
+import 'package:client/core/failure/app_failure.dart';
+import 'package:client/feature/auth/model/user/user_model.dart';
 import 'package:client/feature/auth/view/pages/sign_up.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/theme/app_pallete.dart';
 import '../../../../core/theme/custom_field.dart';
+import '../../repository/auth_remote_repository.dart';
 import '../widgets/auth_gradiant_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -58,12 +63,17 @@ class _LoginPageState extends State<LoginPage> {
                 buttonText: 'Sign in',
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
-                    /*await ref
-                        .read(authViewModelProvider.notifier)
-                        .loginUser(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );*/
+                    final res =  AuthRemoteRepository().login(
+                        email: emailController.text,
+                        password: passwordController.text
+                    );
+                    final val = switch(res){
+                      Left(value: final l) => l,
+                      Right(value: final r) => r,
+                      // TODO: Handle this case.
+                      Future<Either<AppFailure, UserModel>>() => throw UnimplementedError(),
+                    };
+                    print(val);
                   } else {
                     //showSnackBar(context, 'Missing fields!');
                   }
